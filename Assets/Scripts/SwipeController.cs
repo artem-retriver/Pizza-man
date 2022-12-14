@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SwipeController : MonoBehaviour
 {
-    public static bool tap, swipeLeft, swipeRight, swipeUp;
+    /*public static bool tap, swipeLeft, swipeRight, swipeUp;
     private bool isDraging = false;
     private Vector2 startTouch, swipeDelta;
 
@@ -77,5 +77,5 @@ public class SwipeController : MonoBehaviour
     {
         startTouch = swipeDelta = Vector2.zero;
         isDraging = false;
-    }
+    }*/
 }

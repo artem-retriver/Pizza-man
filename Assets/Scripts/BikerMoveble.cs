@@ -18,31 +18,51 @@ public class BikerMoveble : MonoBehaviour
     private new Rigidbody rigidbody;
     private bool jumping = false;
     private float jumpStart;
-    //private bool isleft = false;
+
+    private bool isRight = false;
+    private bool isLeft = false;
+    private bool isJump = false;
 
     void Start()
     {
         rigidbody = GetComponent<Rigidbody>();
     }
 
-    public void InputHandler()
+    public void ButtonClick()
     {
-        if (SwipeController.swipeLeft)
+        if (isLeft == true)
         {
             spineBike.LeftRotation();
             ChangeLane(-5);
+            isLeft = false;
         }
-        else if (SwipeController.swipeRight)
+        else if (isRight == true)
         {
             spineBike.RightRotation();
             ChangeLane(5f);
+            isRight = false;
         }
-        else if (SwipeController.swipeUp)
+        else if (isJump == true)
         {
             Jump();
+            isJump = false;
         }
     }
 
+    public void RightButton()
+    {
+        isRight = true;
+    }
+
+    public void JumpButton()
+    {
+        isJump = true;
+    }
+
+    public void LeftButton()
+    {
+        isLeft = true;
+    }
 
     private void Update()
     {
@@ -53,20 +73,9 @@ public class BikerMoveble : MonoBehaviour
 
         if(transform.position.x == -7.5 || transform.position.x == -2.5 || transform.position.x == 2.5 || transform.position.x == 7.5)
         {
-            //Debug.Log("+");
             Vector3 curRot = new(25, 0, -90);
             spineBike.transform.eulerAngles = curRot;
         }
-        /*if(isleft == true)
-        {
-            Vector3 newRotataion = new Vector3(0, 0, 10);
-            transform.eulerAngles = newRotataion;
-            isleft = false;
-        }else if (isleft == false)
-        {
-            Vector3 newRotataion = new Vector3(0, 0, 0);
-            transform.eulerAngles = newRotataion;
-        }*/
     }
 
     public void Move()
@@ -77,14 +86,13 @@ public class BikerMoveble : MonoBehaviour
             {
                 speed += joystick.Direction.x * 0.1f;
             }
-        }else
-        if(-(joystick.Direction.x) >= 0)
+        }else if(-(joystick.Direction.x) >= 0)
         {
-            if(speed >= 5)
+            if (speed >= 5)
             {
                 speed -= -joystick.Direction.x * 0.1f;
             }
-            
+
         }
 
         rigidbody.velocity = Vector3.forward * speed;
@@ -103,7 +111,6 @@ public class BikerMoveble : MonoBehaviour
             if (ratio >= 1f)
             {
                 jumping = false;
-                //anim.SetBool("Jumping", false);
             }
             else
             {
@@ -124,8 +131,6 @@ public class BikerMoveble : MonoBehaviour
         if (!jumping)
         {
             jumpStart = transform.position.z;
-            //anim.SetFloat("JumpSpeed", speed / jumpLenght);
-            //anim.SetBool("Jumping", true);
             jumping = true;
         }
     }

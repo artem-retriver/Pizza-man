@@ -34,7 +34,6 @@ public class GameManager : MonoBehaviour
     private int startRoad = 2;
     private int startCar = 15;
     private int startPizza = 25;
-    //private int startPizzaBuy = 1;
     private int posRandomZCars = 20;
     private int posRandomZPizza = 20;
     private int posRandomZPizzaBuy = 100;
@@ -124,7 +123,6 @@ public class GameManager : MonoBehaviour
     public void SpawnPizzaBuy(int pizzaBuyIndex)
     {
         var posRandomX = randomPosBuy[Random.Range(0, randomPosBuy.Count)];
-        //posRandomX.y = 0.5f;
 
         GameObject nextPizzaBuy = Instantiate(pizzaBuyPrefabs[pizzaBuyIndex], posRandomX + transform.forward * posRandomZPizzaBuy, transform.rotation);
         activePizzaBuy.Add(nextPizzaBuy);
@@ -136,7 +134,6 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPizza(int pizzaIndex)
     {
-        //Debug.Log("+");
         var posRandomX = randomPosition[Random.Range(0, randomPosition.Count)];
         posRandomX.y = 2;
 
@@ -164,6 +161,5 @@ public class GameManager : MonoBehaviour
     public void DeleteCars(GameObject curCar)
     {
         Destroy(curCar);
-        //activeCars.RemoveAt(0);
     }
 }

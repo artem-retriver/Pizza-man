@@ -5,12 +5,6 @@ using UnityEngine;
 public class Pizza : MonoBehaviour
 {
     public float speedPizza = 1;
-    //public bool isOn = false;
-
-    private void Start()
-    {
-        
-    }
 
     private void Update()
     {
@@ -23,12 +17,4 @@ public class Pizza : MonoBehaviour
         transform.eulerAngles = newRotation;
         speedPizza += 1;
     }
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        if (other.TryGetComponent(out BikerController bikerController))
-        {
-            Destroy(gameObject);
-        }
-    }*/
 }
