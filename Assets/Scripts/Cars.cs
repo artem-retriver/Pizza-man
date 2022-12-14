@@ -7,7 +7,7 @@ public class Cars : MonoBehaviour
     public Rigidbody rb;
     public float speed;
     public bool isTouch = false;
-    Vector3 currentPos = new Vector3();
+    //Vector3 currentPos = new Vector3();
     //Vector3 currentPosY = new Vector3();
 
     // Start is called before the first frame update

@@ -8,21 +8,36 @@ public class GameManager : MonoBehaviour
 {
     public GameObject[] roadPrefabs;
     public GameObject[] carPrefabs;
+    public GameObject[] pizzaPrefabs;
+    public GameObject[] pizzaBuyPrefabs;
+
+    public List<GameObject> activePizza = new List<GameObject>();
+    public List<GameObject> activePizzaBuy = new List<GameObject>();
     public List<GameObject> activeCars = new List<GameObject>();
     public List<GameObject> activeRoads = new List<GameObject>();
+
+    public List<Vector3> randomPosBuy = new List<Vector3>();
     public List<Vector3> randomPosition = new List<Vector3>();
+
     [SerializeField] public BikerMoveble moveble;
+    [SerializeField] public BikerController controller;
     [SerializeField] public Transform biker;
     [Header("Texts:")]
     [SerializeField] public TextMeshProUGUI textSpeed;
+    [SerializeField] public TextMeshProUGUI textPizza;
+    [SerializeField] public TextMeshProUGUI textOrder;
+
+    public GameObject currentPizzaBuy;
 
     private float spawnRoad = 0;
-    private float spawnCar = 0;
-    private float lenghtCar = 10;
     private float lenghtRoad = 320;
     private int startRoad = 2;
     private int startCar = 15;
-    private int posRandomZ = 20;
+    private int startPizza = 25;
+    //private int startPizzaBuy = 1;
+    private int posRandomZCars = 20;
+    private int posRandomZPizza = 20;
+    private int posRandomZPizzaBuy = 100;
 
     private void Start()
     {
@@ -31,18 +46,28 @@ public class GameManager : MonoBehaviour
             SpawnRoad(Random.Range(0, roadPrefabs.Length));
         }
 
-       // if()
         for (int i = 0; i < startCar; i++)
         {
             SpawnCars(Random.Range(0, carPrefabs.Length));
         }
+
+        for (int i = 0; i < startPizza; i++)
+        {
+            SpawnPizza(Random.Range(0, pizzaPrefabs.Length));
+        }
+
+        SpawnPizzaBuy(0);
     }
 
     private void Update()
     {
         textSpeed.text = moveble.speed.ToString();
+        textPizza.text = controller.pizzaCount.ToString();
+        textPizza.text += "/20";
+        textOrder.text = controller.pizzaBuy.ToString();
+        textOrder.text += "/50";
 
-        if(biker.transform.position.z - 310 > spawnRoad - (startRoad * lenghtRoad))
+        if (biker.transform.position.z - 310 > spawnRoad - (startRoad * lenghtRoad))
         {
             SpawnRoad(Random.Range(0, roadPrefabs.Length));
             DeleteRoad();
@@ -59,15 +84,34 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+
+        for (int i = 0; i < activePizza.Count; i++)
+        {
+            if (biker.transform.position.z >= activePizza[i].transform.position.z)
+            {
+                {
+                    SpawnPizza(Random.Range(0, pizzaPrefabs.Length));
+                    DeleteCars(activePizza[i]);
+                    activePizza.RemoveAt(i);
+                }
+            }
+        }
+
+        if (biker.transform.position.z + 0.5 >= activePizzaBuy[0].transform.position.z)
+        {
+            SpawnPizzaBuy(0);
+            DeletePizzaBuy(activePizzaBuy[0]);
+            activePizzaBuy.RemoveAt(0);
+        }
     }
 
     public void SpawnCars(int carIndex)
     {
         var posRandomX = randomPosition[Random.Range(0, randomPosition.Count)];
         
-        GameObject nextCar = Instantiate(carPrefabs[carIndex], posRandomX + transform.forward * posRandomZ, transform.rotation);
+        GameObject nextCar = Instantiate(carPrefabs[carIndex], posRandomX + transform.forward * posRandomZCars, transform.rotation);
         activeCars.Add(nextCar);
-        posRandomZ += 20;
+        posRandomZCars += 20;
     }
 
     public void SpawnRoad(int gameObjectIndex)
@@ -75,6 +119,40 @@ public class GameManager : MonoBehaviour
         GameObject nextRoad = Instantiate(roadPrefabs[gameObjectIndex], transform.forward * spawnRoad, transform.rotation);
         activeRoads.Add(nextRoad);
         spawnRoad += lenghtRoad;
+    }
+
+    public void SpawnPizzaBuy(int pizzaBuyIndex)
+    {
+        var posRandomX = randomPosBuy[Random.Range(0, randomPosBuy.Count)];
+        //posRandomX.y = 0.5f;
+
+        GameObject nextPizzaBuy = Instantiate(pizzaBuyPrefabs[pizzaBuyIndex], posRandomX + transform.forward * posRandomZPizzaBuy, transform.rotation);
+        activePizzaBuy.Add(nextPizzaBuy);
+        posRandomZPizzaBuy += 100;
+
+        currentPizzaBuy = nextPizzaBuy;
+        return;
+    }
+
+    public void SpawnPizza(int pizzaIndex)
+    {
+        //Debug.Log("+");
+        var posRandomX = randomPosition[Random.Range(0, randomPosition.Count)];
+        posRandomX.y = 2;
+
+        GameObject nextPizza = Instantiate(pizzaPrefabs[pizzaIndex], posRandomX + transform.forward * posRandomZPizza, transform.rotation);
+        activePizza.Add(nextPizza);
+        posRandomZPizza += 10;
+    }
+
+    public void DeletePizza(GameObject curPiz)
+    {
+        Destroy(curPiz);
+    }
+
+    public void DeletePizzaBuy(GameObject curPizBuy)
+    {
+        Destroy(curPizBuy);
     }
 
     public void DeleteRoad()
